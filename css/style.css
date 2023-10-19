@@ -1,0 +1,23 @@
+html,body{
+    margin: 0px;
+    padding: 0px;
+    background-color: green;
+}
+
+
+.cont-head {
+    color: white;
+    background-color: black;
+    text-align: center;
+    font-size: 30px;
+}
+.cards{
+    position: relative;
+    width: 120px;
+    height: auto;
+    margin-left: -90px;
+    left: 120px;
+}
+
+
+
