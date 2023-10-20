@@ -63,6 +63,7 @@ const valueCard = (carta) => {
             ? 11 : 10 
             : value * 1;
 }
+  
 
 const turnCompu = (pointsMins) => {
     do{
@@ -79,9 +80,39 @@ const turnCompu = (pointsMins) => {
         if(pointsMins > 21){
             break; 
         }
-        console.log(` puntos de maquina: ${puntosCompu} `);
+        // console.log(` puntos de maquina: ${puntosCompu} `);
 
     }while( (puntosCompu < pointsMins) && (pointsMins <= 21)  );
+
+    setTimeout(() => {
+        if (puntosCompu === pointsMins) {
+            
+            Swal.fire({
+                title: 'Empate',
+                text: "Parece que no hubo ganador",
+                icon: 'info',
+                
+            })
+        }else if(pointsMins > 21){
+            Swal.fire({
+                title: 'Perdiste',
+                text: 'Vuelve a intentarlo',
+                icon: 'error',
+            })
+        }else if(puntosCompu > 21){
+            Swal.fire({
+                title: 'Ganaste!',
+                text: 'Felicidades, venciste a la maquina',
+                icon: 'success',
+            })
+        }else{
+            Swal.fire({
+                title: 'Perdiste',
+                text: 'Vuelve a intentarlo',
+                icon: 'error',
+            })
+        }
+    }, 15);
 }
 
 
@@ -100,13 +131,6 @@ btnPedir.addEventListener('click', () =>{
     CardsPlayer.append( imageCard ); // añadir carta al dom
 
     if ( puntosPlayer > 21) {
-
-        Swal.fire({
-            title: 'Game over',
-            icon: 'error',
-            text: 'Has perdido 💀',
-        })
-
         console.warn("Has perdido 💀");
         btnPedir.disabled = true; // bloquea el boton
         btnDetener.disabled = true; 
@@ -114,32 +138,37 @@ btnPedir.addEventListener('click', () =>{
         // location.reload();
 
     }else if (puntosPlayer == 21){
-        Swal.fire({
-            title: 'Congratulations',
-            icon: 'success',
-            text: 'Has ganado, Felicitaciones 🤩',
-            
-        })
         console.warn("21 puntos, felicitaciones 🤩");
         btnPedir.disabled = true;
         btnDetener.disabled = true;
         turnCompu( puntosPlayer );
-        // location.reload();
+        
     }
 
-    console.log(`Puntos de jugador: ${puntosPlayer}`);
+    // console.log(`Puntos de jugador: ${puntosPlayer}`);
 });
 
 btnDetener.addEventListener('click', () => {
     btnPedir.disabled = true;
     btnDetener.disabled = true;
+    console.warn('Partida detenida, espera respuesta...');
+    (() => {
+        const alertStop = () =>{
+            Swal.fire({
+                title: 'Has detenido tu partida',
+                text:'Espera tu respuesta...',
+                icon: 'warning',
+                showConfirmButton: false,
+            })
+            
+            setTimeout(() => {
+                turnCompu(puntosPlayer);
+            }, 2000);
+        }
+        alertStop();
+        console.log('fin de bloqueante');
+    })();
 
-    Swal.fire({
-        title: 'Has detenido tu partida',
-        icon: 'warning'
-    })
-
-    turnCompu( puntosPlayer );
 })
 
 btnNuevaPartida.addEventListener('click', () => {
@@ -151,8 +180,9 @@ btnNuevaPartida.addEventListener('click', () => {
         text: "Si vuelves a internarlo, se perdera el progreso!",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: '#4235CD',
+        cancelButtonColor: '#EA5353',
+        cancelButtonText: 'Cancelar',
         confirmButtonText: 'Si, Quiero volver a intentarlo'
       }).then((result) => {
         if (result.isConfirmed) {
@@ -163,7 +193,10 @@ btnNuevaPartida.addEventListener('click', () => {
           )
           setTimeout(() => {
             location.reload();
-          }, 3000);
+            console.clear();
+            deck= []
+            deck= crearDeck();
+          }, 1500);
 
         }
     })
